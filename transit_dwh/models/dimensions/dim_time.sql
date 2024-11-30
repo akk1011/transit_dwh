@@ -1,5 +1,5 @@
 WITH time_dimension AS (
-    SELECT DISTINCT
+    SELECT DISTINCT -- Get unique time records
         datetime,
         hour,
         day,
@@ -18,9 +18,13 @@ WITH time_dimension AS (
             ELSE 'Weekday'
         END as day_type
     FROM {{ ref('stg_raw_transit') }}
+),
+numbered AS (
+    -- Add a row number to create unique keys
+    SELECT 
+        ROW_NUMBER() OVER (ORDER BY datetime) as time_key,
+        *
+    FROM time_dimension
 )
 
-SELECT 
-    {{ dbt_utils.generate_surrogate_key(['datetime']) }} as time_key,
-    *
-FROM time_dimension
+SELECT * FROM numbered

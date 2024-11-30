@@ -13,3 +13,42 @@ models:
         description: Full timestamp
         tests:
           - not_null
+
+  - name: dim_stops
+    description: Stops dimension table
+    columns:
+      - name: stop_id
+        description: Primary key for stops
+        tests:
+          - unique
+          - not_null
+      - name: stop_name
+        description: Name of the stop
+        tests:
+          - not_null
+
+  - name: dim_lines
+    description: Lines dimension table
+    columns:
+      - name: line_id
+        description: Primary key for lines
+        tests:
+          - unique
+          - not_null
+      - name: line
+        description: Line name/code
+        tests:
+          - not_null
+
+  - name: dim_remote_units
+    description: Remote units dimension table
+    columns:
+      - name: remote_unit_id
+        description: Primary key for remote units
+        tests:
+          - unique
+          - not_null
+      - name: remote_unit
+        description: Remote unit code
+        tests:
+          - not_null
