@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: dim_time
+    description: Time dimension table
+    columns:
+      - name: time_key
+        description: Surrogate key for time dimension
+        tests:
+          - unique
+          - not_null
+      - name: datetime
+        description: Full timestamp
+        tests:
+          - not_null
