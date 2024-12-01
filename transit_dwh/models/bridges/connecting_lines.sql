@@ -1,24 +1,28 @@
--- models/bridges/connecting_lines.sql
-WITH split_lines AS (
+WITH normalized_lines AS (
     SELECT DISTINCT
         stop_id,
-        TRIM(value) as connected_line
-    FROM {{ ref('stg_raw_transit') }},
-    TABLE(SPLIT_TO_TABLE(connecting_lines, ','))
+        TRIM(REGEXP_REPLACE(connecting_lines, '\\s+', '')) AS clean_connecting_lines
+    FROM {{ ref('stg_raw_transit') }}
+    WHERE connecting_lines IS NOT NULL
+),
+split_lines AS (
+    SELECT 
+        stop_id,
+        TRIM(value) AS line_code
+    FROM normalized_lines,
+         LATERAL FLATTEN(INPUT => SPLIT(clean_connecting_lines, ','))
 ),
 joined_lines AS (
     SELECT DISTINCT
         s.stop_id,
-        l.line_id
+        l.LINE_ID AS line_id
     FROM split_lines s
-    JOIN {{ ref('dim_lines') }} l 
-        ON TRIM(l.line) = TRIM(s.connected_line)
+    JOIN {{ ref('dim_lines') }} l ON UPPER(s.line_code) = UPPER(l.line_ID)
+    WHERE s.stop_id IS NOT NULL
+      AND l.LINE_ID IS NOT NULL
 )
-
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['stop_id', 'line_id']) }} as connection_id,
+    ROW_NUMBER() OVER (ORDER BY stop_id, line_id) AS connection_id,
     stop_id,
     line_id
 FROM joined_lines
-WHERE stop_id IS NOT NULL 
-    AND line_id IS NOT NULL
