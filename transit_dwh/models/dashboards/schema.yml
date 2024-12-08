@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: dash_kpi_metrics
+    description: Top-level KPIs for transit dashboard
+
+  - name: dash_hourly_ridership
+    description: Hourly ridership analysis with drill-down capabilities
+
+  - name: dash_performance_monitor
+    description: System performance and equipment monitoring metrics
+
+  - name: dash_demographic_analysis
+    description: Demographic and travel pattern analysis
