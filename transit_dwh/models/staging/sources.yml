@@ -1,0 +1,10 @@
+# models/staging/sources.yml
+version: 2
+
+sources:
+  - name: staging
+    database: TRANSIT_DWH
+    schema: STAGING
+    tables:
+      - name: raw_transit_data
+        description: Raw transit data from CSV

@@ -1,0 +1,22 @@
+name: 'transit_dwh'
+version: '1.0.0'
+config-version: 2
+
+profile: 'default'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+models:
+  transit_dwh:
+    staging:
+      +materialized: view
+    dimensions:
+      +materialized: table
+    bridges:
+      +materialized: table
+    facts:
+      +materialized: table

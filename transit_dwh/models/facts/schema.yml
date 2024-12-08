@@ -1,0 +1,219 @@
+version: 2
+
+models:
+  - name: fact_rider_volume
+    description: Fact table recording rider volumes with details per stop and time
+    columns:
+      - name: fact_id
+        description: Primary key for fact table
+        tests:
+          - unique
+          - not_null
+
+      - name: time_key
+        description: Foreign key to dim_time
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_time')
+              field: time_key
+
+      - name: stop_id
+        description: Foreign key to dim_stops
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stops')
+              field: stop_id
+
+      - name: line_id
+        description: Foreign key to dim_lines
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_lines')
+              field: line_id
+
+      - name: remote_unit_id
+        description: Foreign key to dim_remote_units
+
+  - name: fact_stop_utilization
+    description: Fact table for stop utilization metrics
+    columns:
+      - name: fact_id
+        description: Primary key for fact table
+        tests:
+          - unique
+          - not_null
+
+      - name: time_key
+        description: Foreign key to dim_time
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_time')
+              field: time_key
+
+      - name: stop_id
+        description: Foreign key to dim_stops
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stops')
+              field: stop_id
+
+      - name: utilization_rate
+        description: Calculated utilization rate (actual_usage/scheduled_capacity)
+
+      - name: scheduled_capacity
+        description: Planned capacity of the stop
+        tests:
+          - not_null
+
+      - name: actual_usage
+        description: Actual number of riders using the stop
+        tests:
+          - not_null
+
+      - name: is_peak
+        description: Flag indicating peak hour status
+        tests:
+          - not_null
+  
+  - name: fact_line_performance
+    description: Fact table for line performance metrics
+    columns:
+      - name: fact_id
+        description: Primary key for fact table
+        tests:
+          - unique
+          - not_null
+
+      - name: time_key
+        description: Foreign key to dim_time
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_time')
+              field: time_key
+
+      - name: line_id
+        description: Foreign key to dim_lines
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_lines')
+              field: line_id
+
+      - name: schedule_status
+        description: Status of schedule (On-Time/Delayed)
+        tests:
+          - not_null
+
+      - name: trip_timing
+        description: Actual trip time
+        tests:
+          - not_null
+
+      - name: delay_minutes
+        description: Calculated delay in minutes
+
+      - name: on_time_rate
+        description: Binary indicator for on-time status
+        tests:
+          - not_null
+
+      - name: estimated_capacity
+        description: Estimated line capacity
+        tests:
+          - not_null
+
+  - name: fact_remote_monitor
+    description: Fact table for remote unit monitoring events
+    columns:
+      - name: fact_id
+        description: Primary key for fact table
+        tests:
+          - unique
+          - not_null
+
+      - name: time_key
+        description: Foreign key to dim_time
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_time')
+              field: time_key
+
+      - name: remote_unit_id
+        description: Foreign key to dim_remote_units
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_remote_units')
+              field: remote_unit_id
+
+      - name: event_type
+        description: Type of monitoring event
+        tests:
+          - not_null
+
+      - name: status
+        description: Operational status of unit
+        tests:
+          - not_null
+
+      - name: battery_health
+        description: Battery health percentage
+        tests:
+          - not_null
+
+      - name: location
+        description: Current location of remote unit
+        tests:
+          - not_null
+
+  - name: fact_rider_segments
+    description: Fact table for rider segment analysis
+    columns:
+      - name: fact_id
+        description: Primary key for fact table
+        tests:
+          - unique
+          - not_null
+
+      - name: time_key
+        description: Foreign key to dim_time
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_time')
+              field: time_key
+
+      - name: stop_id
+        description: Foreign key to dim_stops
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stops')
+              field: stop_id
+
+      - name: demographic
+        description: Demographic category of riders
+        tests:
+          - not_null
+
+      - name: travel_pattern
+        description: Travel pattern category
+        tests:
+          - not_null
+
+      - name: segment_count
+        description: Count of riders in this segment
+        tests:
+          - not_null
+
+      - name: location_type
+        description: Type of location (Commercial/University/Regular)
+        tests:
+          - not_null

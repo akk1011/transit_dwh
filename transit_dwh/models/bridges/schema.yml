@@ -1,0 +1,72 @@
+
+version: 2
+
+models:
+  - name: connecting_lines
+    description: Bridge table connecting stops with their connecting lines
+    columns:
+      - name: connection_id
+        description: Surrogate key for the connection
+        tests:
+          - unique
+          - not_null
+      - name: stop_id
+        description: Foreign key to stops
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stops')
+              field: stop_id
+      - name: line_id
+        description: Foreign key to lines
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_lines')
+              field: line_id
+
+  - name: daytime_routes
+    description: Bridge table connecting stops with their daytime routes
+    columns:
+      - name: route_id
+        description: Surrogate key for the route
+        tests:
+          - unique
+          - not_null
+      - name: stop_id
+        description: Foreign key to stops
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stops')
+              field: stop_id
+      - name: line_id
+        description: Foreign key to lines
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_lines')
+              field: line_id
+
+  - name: unit_locations
+    description: Bridge table connecting stops with their monitoring units
+    columns:
+      - name: location_id
+        description: Surrogate key for the unit location
+        tests:
+          - unique
+          - not_null
+      - name: stop_id
+        description: Foreign key to stops
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stops')
+              field: stop_id
+      - name: remote_unit_id
+        description: Foreign key to remote units
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_remote_units')
+              field: remote_unit_id
